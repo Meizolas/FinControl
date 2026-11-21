@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/widgets/brand_logo.dart';
@@ -102,7 +103,7 @@ class LoginView extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     FilledButton.icon(
-                      onPressed: vm.loading ? null : vm.login,
+                      onPressed: vm.loading || kIsWeb ? null : vm.login,
                       icon: vm.loading
                           ? const SizedBox.square(
                               dimension: 18,
@@ -111,7 +112,11 @@ class LoginView extends StatelessWidget {
                           : const Icon(LucideIcons.shieldCheck),
                       label: const Padding(
                         padding: EdgeInsets.all(14),
-                        child: Text('Entrar com Keycloak + MFA'),
+                        child: Text(
+                          kIsWeb
+                              ? 'Keycloak + MFA disponível no Android'
+                              : 'Entrar com Keycloak + MFA',
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),

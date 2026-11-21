@@ -6,17 +6,30 @@ import '../../../core/config/app_config.dart';
 class AuthService {
   final _appAuth = const FlutterAppAuth();
   final _storage = const FlutterSecureStorage();
-  Future<String?> get accessToken => _storage.read(key: 'access_token');
-  Future<String?> get demoUserEmail => _storage.read(key: 'demo_user');
+  String? _webDemoUser;
+
+  Future<String?> get accessToken async =>
+      kIsWeb ? null : _storage.read(key: 'access_token');
+  Future<String?> get demoUserEmail async =>
+      kIsWeb ? _webDemoUser : _storage.read(key: 'demo_user');
   Future<bool> get hasSession async =>
       (await accessToken) != null || (await demoUserEmail) != null;
 
   Future<void> loginDemo(String email) async {
+    if (kIsWeb) {
+      _webDemoUser = email;
+      return;
+    }
     await _storage.delete(key: 'access_token');
     await _storage.write(key: 'demo_user', value: email);
   }
 
   Future<void> login() async {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Use o modo demonstração no Chrome. Keycloak + MFA está disponível no Android.',
+      );
+    }
     await _storage.delete(key: 'demo_user');
     final r = await _appAuth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
@@ -35,5 +48,11 @@ class AuthService {
     await _storage.write(key: 'access_token', value: r.accessToken);
   }
 
-  Future<void> logout() => _storage.deleteAll();
+  Future<void> logout() async {
+    if (kIsWeb) {
+      _webDemoUser = null;
+      return;
+    }
+    await _storage.deleteAll();
+  }
 }

@@ -98,66 +98,135 @@ class _RequestsViewState extends State<RequestsView> {
 
   Future<void> _create(BuildContext context) async {
     final resources = context.read<ResourceViewModel>();
+    final access = context.read<AccessViewModel>();
+    final messenger = ScaffoldMessenger.of(context);
     await resources.load();
     if (!context.mounted) return;
+    if (resources.items.isEmpty) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            resources.error ?? 'Nenhum módulo disponível para solicitação.',
+          ),
+        ),
+      );
+      return;
+    }
     String? selected = resources.items.isEmpty
         ? null
         : resources.items.first.id;
     final controller = TextEditingController();
-    await showModalBottomSheet(
+    String? formError;
+    var submitting = false;
+    final created = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (sheet) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          20,
-          20,
-          MediaQuery.viewInsetsOf(sheet).bottom + 20,
-        ),
+      builder: (sheet) => SafeArea(
         child: StatefulBuilder(
-          builder: (context, setState) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Nova solicitação',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: selected,
-                items: resources.items
-                    .map(
-                      (r) => DropdownMenuItem(value: r.id, child: Text(r.name)),
-                    )
-                    .toList(),
-                onChanged: (v) => setState(() => selected = v),
-                decoration: const InputDecoration(labelText: 'Módulo'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: controller,
-                maxLines: 3,
-                decoration: const InputDecoration(labelText: 'Justificativa'),
-              ),
-              const SizedBox(height: 16),
-              FilledButton(
-                onPressed: selected == null
-                    ? null
-                    : () async {
-                        final ok = await context.read<AccessViewModel>().create(
-                          selected!,
-                          controller.text,
-                        );
-                        if (ok && context.mounted) Navigator.pop(context);
-                      },
-                child: const Text('Enviar solicitação'),
-              ),
-            ],
+          builder: (sheetContext, setSheetState) => SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              20,
+              20,
+              20,
+              MediaQuery.viewInsetsOf(sheetContext).bottom + 20,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Nova solicitação',
+                  style: Theme.of(sheetContext).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  initialValue: selected,
+                  items: resources.items
+                      .map(
+                        (r) =>
+                            DropdownMenuItem(value: r.id, child: Text(r.name)),
+                      )
+                      .toList(),
+                  onChanged: submitting
+                      ? null
+                      : (value) => setSheetState(() {
+                          selected = value;
+                          formError = null;
+                        }),
+                  decoration: const InputDecoration(labelText: 'Módulo'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: controller,
+                  enabled: !submitting,
+                  maxLines: 3,
+                  maxLength: 500,
+                  onChanged: (_) => setSheetState(() => formError = null),
+                  decoration: const InputDecoration(
+                    labelText: 'Justificativa',
+                    helperText: 'Informe pelo menos 10 caracteres.',
+                  ),
+                ),
+                if (formError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      formError!,
+                      style: TextStyle(
+                        color: Theme.of(sheetContext).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                FilledButton(
+                  onPressed: selected == null || submitting
+                      ? null
+                      : () async {
+                          final justification = controller.text.trim();
+                          if (justification.length < 10) {
+                            setSheetState(
+                              () => formError =
+                                  'A justificativa deve ter ao menos 10 caracteres.',
+                            );
+                            return;
+                          }
+                          setSheetState(() {
+                            submitting = true;
+                            formError = null;
+                          });
+                          final ok = await access.create(
+                            selected!,
+                            justification,
+                          );
+                          if (!sheetContext.mounted) return;
+                          if (ok) {
+                            Navigator.pop(sheetContext, true);
+                          } else {
+                            setSheetState(() {
+                              submitting = false;
+                              formError =
+                                  access.error ??
+                                  'Não foi possível enviar a solicitação.';
+                            });
+                          }
+                        },
+                  child: submitting
+                      ? const SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Enviar solicitação'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
     controller.dispose();
+    if (created == true && context.mounted) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Solicitação enviada com sucesso.')),
+      );
+    }
   }
 }

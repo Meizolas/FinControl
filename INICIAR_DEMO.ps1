@@ -42,5 +42,5 @@ Write-Host ''
 Write-Host 'FinControl pronto para demonstração.' -ForegroundColor Green
 Write-Host 'API: http://localhost:3000'
 Write-Host 'Keycloak: http://localhost:8081'
-Write-Host 'APK: entrega\FinControl-demo.apk'
-Write-Host 'No app, abra "Entrar no modo demonstração" e escolha um perfil.'
+Write-Host 'Web: execute .\INICIAR_WEB.ps1'
+Write-Host 'No app ou navegador, abra "Entrar no modo demonstração" e escolha um perfil.'

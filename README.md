@@ -12,6 +12,24 @@ No emulador ou celular conectado por USB, também é necessário executar `adb r
 
 ## Inicialização rápida
 
+### Usar pelo Chrome — opção mais rápida
+
+Não é necessário instalar o APK nem abrir um emulador. Depois de instalar os pré-requisitos e clonar o projeto, execute na raiz:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\INICIAR_WEB.ps1
+```
+
+O script prepara banco, Keycloak e API, instala as dependências necessárias e abre o FinControl no Chrome em:
+
+```text
+http://localhost:5173
+```
+
+No navegador, utilize **Entrar no modo demonstração**. A autenticação Keycloak + MFA continua disponível no aplicativo Android, mas fica desabilitada na versão Web.
+
+Para encerrar o servidor Web, pressione `Ctrl+C` no terminal. Os contêineres podem ser encerrados depois com `docker compose down`.
+
 ### Pré-requisitos
 
 - Docker Desktop aberto;
@@ -91,6 +109,8 @@ frontend/build/app/outputs/flutter-apk/app-debug.apk
 Na tela inicial, abra **Entrar no modo demonstração** e escolha um perfil. Esse fluxo não abre o Chrome e facilita a troca de papéis.
 
 O modo demo usa a API e o PostgreSQL reais, mantém o RBAC no backend, exige `DEMO_MODE=true` e é recusado quando `NODE_ENV=production`. Ele não deve ser habilitado em ambiente real.
+
+Na Web, a sessão demonstrativa permanece apenas enquanto a página está aberta. Ao atualizar o navegador, selecione o perfil novamente.
 
 ### Keycloak + MFA
 
