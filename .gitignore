@@ -1,0 +1,36 @@
+# Node
+node_modules/
+
+# Flutter / Dart
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins-dependencies
+frontend/.pub/
+frontend/coverage/
+
+# Frontend React antigo / artefatos gerados
+frontend/dist/
+
+# IDEs e sistema operacional
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Configuração local e segredos
+.env
+backend/.env
+frontend/.env
+
+# Logs, cobertura e temporários
+*.log
+coverage/
+*.tmp
+*.bak
+*.png~
+
+# Binários: publique APK em GitHub Releases, não no Git
+entrega/*.apk
+entrega/*.zip
+*.apk

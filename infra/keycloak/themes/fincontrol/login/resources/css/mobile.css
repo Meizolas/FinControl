@@ -1,0 +1,98 @@
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+body,
+.login-pf-page,
+.pf-v5-c-login,
+.pf-v5-c-login__container,
+.pf-v5-c-login__main,
+.pf-v5-c-login__main-body,
+.pf-v5-c-form,
+.pf-v5-c-form__group,
+#kc-container,
+#kc-container-wrapper,
+#kc-content,
+#kc-content-wrapper,
+#kc-form,
+#kc-form-wrapper {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+select,
+textarea,
+button,
+.pf-v5-c-form-control,
+.pf-v5-c-button {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+}
+
+input,
+select,
+textarea,
+.pf-v5-c-form-control,
+.pf-v5-c-button.pf-m-primary {
+  width: 100%;
+}
+
+p,
+li,
+label,
+.instruction,
+.kc-feedback-text {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .pf-v5-c-login__container {
+    display: block;
+    width: 100%;
+  }
+
+  .pf-v5-c-login__main {
+    width: calc(100% - 24px);
+    margin: 12px auto;
+    border-radius: 12px;
+  }
+
+  .pf-v5-c-login__main-header,
+  .pf-v5-c-login__main-body,
+  .pf-v5-c-login__main-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #kc-header,
+  #kc-header-wrapper {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+  }
+
+  #kc-form-buttons,
+  #kc-form-options,
+  #kc-info-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+}

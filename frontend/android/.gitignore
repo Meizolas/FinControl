@@ -1,0 +1,10 @@
+/.gradle
+/captures/
+/local.properties
+GeneratedPluginRegistrant.java
+.cxx/
+
+# Nunca publique chaves de assinatura.
+key.properties
+**/*.keystore
+**/*.jks

@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fincontrol_iam
+      POSTGRES_USER: fincontrol
+      POSTGRES_PASSWORD: fincontrol_local_only
+    ports: ["55434:5432"]
+    volumes:
+      - fincontrol_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fincontrol -d fincontrol_iam"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin_local_only
+    ports: ["8081:8080"]
+    volumes:
+      - ./infra/keycloak/realm-fincontrol.json:/opt/keycloak/data/import/realm-fincontrol.json:ro
+      - ./infra/keycloak/themes/fincontrol:/opt/keycloak/themes/fincontrol:ro
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080; echo -e 'GET /realms/fincontrol HTTP/1.1\r\nhost: localhost\r\nConnection: close\r\n\r\n' >&3; grep '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+volumes:
+  fincontrol_pg:

@@ -1,0 +1,15 @@
+{
+  "realm":"fincontrol","enabled":true,"displayName":"FinControl","sslRequired":"none","loginTheme":"fincontrol","internationalizationEnabled":true,"supportedLocales":["pt-BR"],"defaultLocale":"pt-BR",
+  "roles":{"realm":[{"name":"assessor"},{"name":"gestor"},{"name":"compliance"},{"name":"direcao"}]},
+  "clients":[
+    {"clientId":"fincontrol-web","publicClient":true,"standardFlowEnabled":true,"directAccessGrantsEnabled":false,"redirectUris":["http://localhost:5173/*"],"webOrigins":["http://localhost:5173"],"protocolMappers":[{"name":"audience-api","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.client.audience":"fincontrol-api","access.token.claim":"true"}}]},
+    {"clientId":"fincontrol-api","bearerOnly":true},
+    {"clientId":"fincontrol-mobile","publicClient":true,"standardFlowEnabled":true,"directAccessGrantsEnabled":false,"redirectUris":["br.com.fincontrol:/oauthredirect"],"webOrigins":[],"attributes":{"pkce.code.challenge.method":"S256"},"protocolMappers":[{"name":"audience-api-mobile","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.client.audience":"fincontrol-api","access.token.claim":"true"}}]}
+  ],
+  "users":[
+    {"username":"ana.assessora","email":"ana.assessora@fincontrol.demo","firstName":"Ana","lastName":"Souza","enabled":true,"emailVerified":true,"requiredActions":["CONFIGURE_TOTP"],"credentials":[{"type":"password","value":"Demo@2026","temporary":false}],"realmRoles":["assessor"]},
+    {"username":"gestor.ti","email":"gestor.ti@fincontrol.demo","firstName":"Carlos","lastName":"Lima","enabled":true,"emailVerified":true,"requiredActions":["CONFIGURE_TOTP"],"credentials":[{"type":"password","value":"Demo@2026","temporary":false}],"realmRoles":["gestor"]},
+    {"username":"compliance","email":"compliance@fincontrol.demo","firstName":"Marina","lastName":"Costa","enabled":true,"emailVerified":true,"requiredActions":["CONFIGURE_TOTP"],"credentials":[{"type":"password","value":"Demo@2026","temporary":false}],"realmRoles":["compliance"]},
+    {"username":"diretor","email":"diretor@fincontrol.demo","firstName":"Rafael","lastName":"Alves","enabled":true,"emailVerified":true,"requiredActions":["CONFIGURE_TOTP"],"credentials":[{"type":"password","value":"Demo@2026","temporary":false}],"realmRoles":["direcao"]}
+  ]
+}

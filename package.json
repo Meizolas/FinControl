@@ -1,0 +1,13 @@
+{
+  "name": "fincontrol",
+  "private": true,
+  "workspaces": ["backend"],
+  "scripts": {
+    "dev": "npm run dev -w backend",
+    "test": "npm test -w backend",
+    "build:android": "cd frontend && flutter build apk --debug",
+    "db:migrate": "npm run migrate -w backend",
+    "db:seed": "npm run seed -w backend"
+  },
+  "devDependencies": {"concurrently": "^9.1.2"}
+}
